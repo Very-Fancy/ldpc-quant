@@ -18,11 +18,11 @@ Parameters:
    q_nonuniform - number of bits for non-uniform quatization (< q_uniform)
    fe - number of frames with error (the same for unquantized, uniform and non-uniform variants)
     
-  <img src="results/05eng.png" width=80%></img>
+  <img src="results/05eng.png" width=60%></img>
   
-  <img src="results/075eng.png" width=80%></img>
+  <img src="results/075eng.png" width=60%></img>
    
-  <img src="results/02eng.png" width=80%></img>
+  <img src="results/02eng.png" width=60%></img>
        
     
     
