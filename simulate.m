@@ -17,8 +17,8 @@ function simulate(M, thrf, ldpc_filename, iter, snr_array, q_uniform, q_nonunifo
     %
     
     addpath('quantDMC','codes','binary_soft_decoder');
-    %     q_uniform = 6;
-    %     q_nonuniform = 4;
+    %   q_uniform = 6;
+    %   q_nonuniform = 4;
 
     init_ldpc = @(x) decode_soft(-2, x);
     free_ldpc = @(x) decode_soft(-1, x);
@@ -32,6 +32,7 @@ function simulate(M, thrf, ldpc_filename, iter, snr_array, q_uniform, q_nonunifo
         thr = threshold_sigma([2^q_uniform-1 2^q_nonuniform-1 2^q_nonuniform-1], code, iter);
     end
 
+    disp(sprintf('\nNoise decoding threshold sigma^2 = %f\n', thr.channel.var));
     % initialize LDPC
     [h, q] = alist2sparse(ldpc_filename);
     [H, G] = ldpc_h2g(h,q);
@@ -53,13 +54,13 @@ function simulate(M, thrf, ldpc_filename, iter, snr_array, q_uniform, q_nonunifo
     hDemod = comm.BPSKDemodulator('DecisionMethod', 'Log-likelihood ratio');
 
     for ii = 1:length(snr_array)
-        % NEW SNR
+        %   NEW SNR
         snr = snr_array(ii);
 
         noise_var = 0.5*10^(-(snr)/10)*(1/R);
         sigma = sqrt(noise_var);
 
-        %Uniform Q bounds
+        %   Uniform Q bounds
         [~,~,B] = biAwgn2Dmc(sigma^2,2^q_uniform - 1);
 
         hDemod.Variance = sigma^2;
@@ -79,7 +80,7 @@ function simulate(M, thrf, ldpc_filename, iter, snr_array, q_uniform, q_nonunifo
 
         while  wrong_dec_unq < fe ||  wrong_dec_uniq < fe || wrong_dec_q < fe%
             tests = tests + 1;
-            iwd = zeros(1,K);%randi(q, 1, K) - 1 %%zeros(1,K); %
+            iwd = zeros(1,K); %randi(q, 1, K) - 1 %%zeros(1,K); %
 
             cwd = zeros(1, N); %ldpc_encode(iwd, G, 2);%
             modulated = 1-cwd.*2;
@@ -88,7 +89,7 @@ function simulate(M, thrf, ldpc_filename, iter, snr_array, q_uniform, q_nonunifo
 
             in_llrs = hDemod(rx');
             
-            % Clipping the values to be in [-2, 2]
+            %   Clipping the values to be in [-2, 2]
             in_llrs_unq=[];
             for i = 1:N
                 in_llrs_unq=[in_llrs_unq sign(rx(i))*(min([abs(rx(i)) 2]))];
@@ -102,10 +103,10 @@ function simulate(M, thrf, ldpc_filename, iter, snr_array, q_uniform, q_nonunifo
             scale_array =ones(1, N);
             offset_array =0*ones(1,N);
 
-            %Uniform Quantization
+            %   Uniform Quantization
             [~,in_llrs_uniq] = quantiz(in_llrs_unq, B(2:end-1), -(2^(q_uniform-1)-1):2^(q_uniform-1)-1);
 
-            %Non-Uniform Quantization
+            %   Non-Uniform Quantization
             [~,in_llrs_q] = quantiz(in_llrs_unq, thr.QBounds, -(2^(q_nonuniform-1)-1):2^(q_nonuniform-1)-1);
             
             %   decode_soft(0, ...) - unquantized min-sum decoder
