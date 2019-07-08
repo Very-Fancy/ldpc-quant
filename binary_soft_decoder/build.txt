@@ -1,0 +1,1 @@
+mex decode_soft.cpp -DLOG_Q=1 -I../../common
