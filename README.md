@@ -11,7 +11,7 @@ Estimation of performance of data transmission system with different parameters:
   
 Running the simulation:
 
-     simulate(2, 0,'codes/LDPC_5G_K120_R075.alist', 20,[1 1.5 2 2.5 3 3.5 4 4.5 5], 6, 4, 10)
+    simulate(2, 0,'codes/LDPC_5G_K120_R075.alist', 20,[1 1.5 2 2.5 3 3.5 4 4.5 5], 6, 4, 10)
   
   Parameters:
   - M = 2 for BPSK
